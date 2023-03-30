@@ -13,7 +13,8 @@ deve seguir o layout (Wireframe) disponibilizado como referência para a criaç�
 * Rodapé com informações de pagamento, ícones de redes sociais e contato.
 * Sugere-se que você escolha uma temática de loja do seu interesse com com produtos gerais.
 
-<br/>
+### Wireframe a ser seguido para a execução do trabalho:
+
 <br/>
 
 ![Wireframe a ser seguido para a implementação do trabalho](https://github.com/PedroHenAssuncao/PUC/blob/main/DIW/Trabalho_EComerce/wireframe-ecommerce.png?raw=true)

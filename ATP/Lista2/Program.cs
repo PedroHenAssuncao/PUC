@@ -13,7 +13,10 @@ namespace Lista2
             //questao3.rodar();
             //questao4.rodar();
             //questao6.rodar();
-            questao7.rodar();
+            //questao7.rodar();
+            //questao8.rodar();
+            //questao9.rodar();
+            questao10.rodar();
         }
     }
 }

@@ -1,0 +1,16 @@
+C:\Users\1478372\Documents\Lista Modularizacao\bin\Debug\net5.0\Lista4.exe
+C:\Users\1478372\Documents\Lista Modularizacao\bin\Debug\net5.0\Lista4.deps.json
+C:\Users\1478372\Documents\Lista Modularizacao\bin\Debug\net5.0\Lista4.runtimeconfig.json
+C:\Users\1478372\Documents\Lista Modularizacao\bin\Debug\net5.0\Lista4.runtimeconfig.dev.json
+C:\Users\1478372\Documents\Lista Modularizacao\bin\Debug\net5.0\Lista4.dll
+C:\Users\1478372\Documents\Lista Modularizacao\bin\Debug\net5.0\ref\Lista4.dll
+C:\Users\1478372\Documents\Lista Modularizacao\bin\Debug\net5.0\Lista4.pdb
+C:\Users\1478372\Documents\Lista Modularizacao\obj\Debug\net5.0\Lista4.csproj.AssemblyReference.cache
+C:\Users\1478372\Documents\Lista Modularizacao\obj\Debug\net5.0\Lista4.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\1478372\Documents\Lista Modularizacao\obj\Debug\net5.0\Lista4.AssemblyInfoInputs.cache
+C:\Users\1478372\Documents\Lista Modularizacao\obj\Debug\net5.0\Lista4.AssemblyInfo.cs
+C:\Users\1478372\Documents\Lista Modularizacao\obj\Debug\net5.0\Lista4.csproj.CoreCompileInputs.cache
+C:\Users\1478372\Documents\Lista Modularizacao\obj\Debug\net5.0\Lista4.dll
+C:\Users\1478372\Documents\Lista Modularizacao\obj\Debug\net5.0\ref\Lista4.dll
+C:\Users\1478372\Documents\Lista Modularizacao\obj\Debug\net5.0\Lista4.pdb
+C:\Users\1478372\Documents\Lista Modularizacao\obj\Debug\net5.0\Lista4.genruntimeconfig.cache

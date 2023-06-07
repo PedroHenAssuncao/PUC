@@ -52,6 +52,8 @@ namespace TrabalhoFinalAtp
                 EstoqueMatriz = new string[numColunas,Enum.GetValues(typeof(DadosProdutos)).Length];
 
                 PreencheMatriz(conteudo);
+
+                AtualizaVetorProdutos();
             }
             catch(Exception ex)
             {
@@ -110,8 +112,6 @@ namespace TrabalhoFinalAtp
             }
 
             RecuperaDados();
-
-            AtualizaVetorProdutos();
         }
 
         private void AtualizaArquivo()

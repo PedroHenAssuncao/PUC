@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace TrabalhoFinalAtp
     {
         private string _caminhoDados = string.Empty;
 
-        private int Colunas
+        public int Colunas
         {
             get
             {
@@ -18,7 +19,7 @@ namespace TrabalhoFinalAtp
             }
         }
 
-        private int Linhas 
+        public int Linhas 
         { 
             get 
             {
@@ -55,49 +56,65 @@ namespace TrabalhoFinalAtp
 
                 AtualizaVetorProdutos();
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 throw;
             }
         }
 
-        public void RealizaCompra(int id)
+        public bool VendaValida(int id, int qtde)
         {
-            bool exists = false;
+            for (int i = 0; i < Colunas; i++)
+            {
+                if (EstoqueMatriz[i, (int)DadosProdutos.Id] == id.ToString())
+                {
+                    if (qtde < int.Parse(EstoqueMatriz[i, (int)DadosProdutos.Quantidade]))
+                    {
+                        return true;
+                    }
+                }
+            }
 
+            return false;
+        }
+
+        public bool VendaValida(string nomeProduto, int qtde)
+        {
+            for (int i = 0; i < Colunas; i++)
+            {
+                if (EstoqueMatriz[i, (int)DadosProdutos.Produto].ToLower() == nomeProduto.ToLower())
+                {
+                    if (qtde < int.Parse(EstoqueMatriz[i, (int)DadosProdutos.Quantidade]))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public void RealizaCompra(int id, int qtde)
+        {
             for (int i = 0; i < Colunas; i++)
             {
                 if (EstoqueMatriz[i, (int)DadosProdutos.Id] == id.ToString())
                 {
                     var aux = EstoqueMatriz[i, (int)DadosProdutos.Quantidade];
-                    EstoqueMatriz[i,(int)DadosProdutos.Quantidade] = (int.Parse(aux) - 1).ToString();
-                    exists = true;
+                    EstoqueMatriz[i,(int)DadosProdutos.Quantidade] = (int.Parse(aux) - qtde).ToString();
                 }
-            }
-
-            if (exists == true)
-            {
-                AtualizaArquivo();
             }
         }
 
-        public void RealizaCompra(string nomeProduto)
+        public void RealizaCompra(string nomeProduto, int qtde)
         {
-            bool exists = false;
-
             for (int i = 0; i < Colunas; i++)
             {
-                if (EstoqueMatriz[i, (int)DadosProdutos.Produto] == nomeProduto)
+                if (EstoqueMatriz[i, (int)DadosProdutos.Produto].ToLower() == nomeProduto.ToLower())
                 {
                     var aux = EstoqueMatriz[i, (int)DadosProdutos.Quantidade];
-                    EstoqueMatriz[i, (int)DadosProdutos.Quantidade] = (int.Parse(aux) - 1).ToString();
-                    exists = true;
+                    EstoqueMatriz[i, (int)DadosProdutos.Quantidade] = (int.Parse(aux) - qtde).ToString();
                 }
-            }
-
-            if (exists == true)
-            {
-                AtualizaArquivo();
             }
         }
 
@@ -105,16 +122,13 @@ namespace TrabalhoFinalAtp
         {
             if (!File.Exists(_caminhoDados))
             {
-                var stream = File.Create(_caminhoDados);
-                stream.Close();
-
-                return;
+                throw new Exception("O arquivo não existe");
             }
 
             RecuperaDados();
         }
 
-        private void AtualizaArquivo()
+        public void AtualizaArquivo()
         {
             using (StreamWriter writer = new StreamWriter(_caminhoDados,false))
             {
@@ -146,7 +160,7 @@ namespace TrabalhoFinalAtp
 
             for (int i = 0; i < Colunas; i++)
             {
-                Produtos[i] = EstoqueMatriz[i, 0];
+                Produtos[i] = EstoqueMatriz[i, (int)DadosProdutos.Id] + ";" + EstoqueMatriz[i, (int)DadosProdutos.Produto];
             }
         }
     }

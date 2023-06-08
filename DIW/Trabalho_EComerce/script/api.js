@@ -33,13 +33,6 @@ function getProductsInitialGrid() {
                 card.classList.add('card', 'col-lg-4', 'col-md-4', 'col-sm-6', 'text-center', 'produto', 'produtoClick')
                 card.setAttribute('data-id', item.id)
 
-                card.addEventListener('click', function () {
-                    // Obter o ID único do atributo de dados do card
-                    var id = this.getAttribute('data-id');
-                    var url = './detalhes.html?id=' + id
-                    window.location.href = url;
-                });
-
                 let cardBody = document.createElement('div')
                 cardBody.classList.add('card-body')
 
@@ -56,9 +49,20 @@ function getProductsInitialGrid() {
                 preco.classList.add('card-text')
                 preco.textContent = 'Preço: $' + item.price
 
+                let botao = document.createElement('button')
+                botao.classList.add('btn', 'btn-info')
+                botao.textContent = 'Detalhes'
+                botao.addEventListener('click', function () {
+                    // Obter o ID único do atributo de dados do card
+                    var id = card.getAttribute('data-id');
+                    var url = './detalhes.html?id=' + id
+                    window.location.href = url;
+                });
+
                 // Adicionar elementos ao card
                 cardBody.appendChild(titulo)
                 cardBody.appendChild(preco)
+                cardBody.appendChild(botao)
 
                 card.appendChild(imagem)
                 card.appendChild(cardBody)
@@ -85,13 +89,6 @@ function getMostViewd() {
                 card.classList.add('card', 'col-lg-4', 'col-md-6', 'col-sm-12', 'text-center', 'produtoClick')
                 card.setAttribute('data-id', item.id)
 
-                card.addEventListener('click', function () {
-                    // Obter o ID único do atributo de dados do card
-                    var id = this.getAttribute('data-id');
-                    var url = './detalhes.html?id=' + id
-                    window.location.href = url;
-                });
-
                 let cardBody = document.createElement('div')
                 cardBody.classList.add('card-body')
 
@@ -106,9 +103,20 @@ function getMostViewd() {
                 let titulo = document.createElement('p')
                 titulo.textContent = item.title;
 
+                let botao = document.createElement('button')
+                botao.classList.add('btn', 'btn-info')
+                botao.textContent = 'Detalhes'
+                botao.addEventListener('click', function () {
+                    // Obter o ID único do atributo de dados do card
+                    var id = card.getAttribute('data-id');
+                    var url = './detalhes.html?id=' + id
+                    window.location.href = url;
+                });
+
                 // Adicionar elementos ao card
                 div.appendChild(imagem)
                 div.appendChild(titulo)
+                div.appendChild(botao)
 
                 cardBody.appendChild(div);
 
@@ -256,10 +264,21 @@ function getProductsSearchCategory(valor) {
                 let preco = document.createElement('p')
                 preco.classList.add('card-text')
                 preco.textContent = 'Preço: $' + item.price
+                
+                let botao = document.createElement('button')
+                botao.classList.add('btn', 'btn-info')
+                botao.textContent = 'Detalhes'
+                botao.addEventListener('click', function () {
+                    // Obter o ID único do atributo de dados do card
+                    var id = card.getAttribute('data-id');
+                    var url = './detalhes.html?id=' + id
+                    window.location.href = url;
+                });
 
                 // Adicionar elementos ao card
                 cardBody.appendChild(titulo)
                 cardBody.appendChild(preco)
+                cardBody.appendChild(botao)
 
                 card.appendChild(imagem)
                 card.appendChild(cardBody)
@@ -287,14 +306,6 @@ function getProductsSearchText(valor) {
                     card.classList.add('card', 'col-lg-4', 'col-md-4', 'col-sm-6', 'text-center', 'produto', 'produtoClick')
                     card.setAttribute('data-id', item.id)
 
-                    card.addEventListener('click', function () {
-                        // Obter o ID único do atributo de dados do card
-                        var id = this.getAttribute('data-id');
-                        localStorage.setItem('idDetalhes', id);
-                        var url = './detalhes.html?id=' + id
-                        window.location.href = url;
-                    });
-
                     let cardBody = document.createElement('div')
                     cardBody.classList.add('card-body')
 
@@ -311,9 +322,20 @@ function getProductsSearchText(valor) {
                     preco.classList.add('card-text')
                     preco.textContent = 'Preço: $' + item.price
 
+                    let botao = document.createElement('button')
+                    botao.classList.add('btn', 'btn-info')
+                    botao.textContent = 'Detalhes'
+                    botao.addEventListener('click', function () {
+                        // Obter o ID único do atributo de dados do card
+                        var id = card.getAttribute('data-id');
+                        var url = './detalhes.html?id=' + id
+                        window.location.href = url;
+                    });
+
                     // Adicionar elementos ao card
                     cardBody.appendChild(titulo)
                     cardBody.appendChild(preco)
+                    cardBody.appendChild(botao)
 
                     card.appendChild(imagem)
                     card.appendChild(cardBody)

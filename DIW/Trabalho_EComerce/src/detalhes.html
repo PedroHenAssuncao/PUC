@@ -29,10 +29,10 @@
 
                 <div class="d-none d-sm-block flex-grow-1 flex-shrink-1">
                     <p class="ms-3">Bem Vindo, ao Portal Tech!</p>
-                    <form class="d-flex ms-3" role="search">
+                    <div class="d-flex ms-3" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-info" type="button">Pesquisar</button>
-                    </form>
+                    </div>
                 </div>
             </div>
 
@@ -50,16 +50,16 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                    <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Acessar</a>
+                                    <a class="nav-link" href="./index.html">Acessar</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Registrar</a>
+                                    <a class="nav-link" href="./index.html">Registrar</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Conta</a>
+                                    <a class="nav-link" href="./index.html">Conta</a>
                                 </li>
                             </ul>
                         </div>
@@ -121,125 +121,11 @@
         </div>
     </div>
 
-    <!-- Forumário e Carrossel -->
-    <div class="container formCarro">
-        <div class="row">
-            <div class="col-12 col-md-3 p-2  border mt-4">
-                <form>
-                    <h6>Busca rápida</h6>
-                    <span>Encontre produtos pelo melhor preço do mercado</span>
-                    <div class="form-group pt-2 pb-2">
-                        <label for="selectTiposProdutos">Tipos</label>
-                        <select class="form-control" id="selectTiposProdutos">
-                            <option disabled selected hidden>Tipo Produto</option>
-                            
-                        </select>
-                    </div>
-                    <!-- <div class="form-group pt-2">
-                        <label for="selectMarca">Marca</label>
-                        <select class="form-control" id="selectMarca">
-                            <option disabled selected hidden>Marca</option>
-                            <option>Acer</option>
-                            <option>LG</option>
-                            <option>Samsumg</option>
-                            <option>HyperX</option>
-                            <option>Motorola</option>
-                            <option>Amazon</option>
-                        </select>
-                    </div>
-
-                    <div class="row pt-2 pb-2">
-                        <span>Faixa de preço</span>
-                        <div class="col">
-                            <input type="text" class="form-control" placeholder="De">
-                        </div>
-                        <div class="col">
-                            <input type="text" class="form-control" placeholder="Até">
-                        </div>
-                    </div> -->
-                    <button onclick="buscarCategoria()" type="button" class="btn btn-outline-dark col-12">Buscar</button>
-                </form>
-            </div>
-            <div class="col-12 col-md-9 mt-4 p-3">
-                <div class="row">
-                    <div id="carousel" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#carousel" data-bs-slide-to="0" class="active"
-                                aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#carousel" data-bs-slide-to="1"
-                                aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#carousel" data-bs-slide-to="2"
-                                aria-label="Slide 3"></button>
-                        </div>
-                        <div id="CarrosselCards" class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="../img/TvSamsumg.jpg" class="d-block w-100" alt="Tv Samsumg">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../img/HyperXSSD.jpg" class="d-block w-100" alt="HyperX SSD">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../img/notebookAcer.jpg" class="d-block w-100" alt="Notebook Acer">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carousel"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Fim Formulário e Carrossel -->
-
-    <!-- Fotos com barra lateral -->
     <div class="container mt-2">
-        <!-- Mais vistos-->
-        <div class="container col-12">
-            <div class="row text-center">
-                <div class="card col-lg-9 col-md-9 col-sm-12">
-                    <div class="card-body col-12">
-                        <h5 class="card-title">Mais vistos</h5>
-                        <div class="container col-12">
-                            <div id="ContainerMaisVistos" class="row text-center">
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card col-lg-3 col-md-3 col-sm-12 mx-auto justify-content-center">
-                    <div class="card-body">
-                        <form>
-                            <h6>Se inscreva para receber noticias</h6>
-                            <span>Ao se inscrever nos enviaremos promoções</span>
-                            <div class="form-group pt-2">
-                                <div class="col" style="margin-bottom: 5px;">
-                                    <input type="text" class="form-control" placeholder="example@mail.com">
-                                </div>
-                                <button type="button" class="btn btn-outline-dark col-12">Inscrever</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <div id="ContainerNovoCard" class="row">
+            
         </div>
-        <!-- Fim Mais vistos-->
-        <!-- Produtos -->
-        <div class="container col-12">
-            <div id="containerCards" class="row">
-
-            </div>
-        </div>
-        <!--Fim Produtos-->
     </div>
-    <!-- Fim Fotos com barra lateral -->
 
     <!-- Rodapé - início-->
     <footer class="text-center text-lg-start text-muted" style="background-color: #e0e0eb;">
@@ -320,24 +206,14 @@
 
     </footer>
     <!--Fim Rodapé-->
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="../script/api.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            getProductsInitialGrid();
-            getMostViewd();
-            //getCarroussel(); O carroussel quebra ao tentar puxar dados dinamicos
-            loadCategories();
+            getDetalhes()
         });
-
-        function buscarCategoria(){
-            let selectElement = document.getElementById('selectTiposProdutos')
-            var url = './pesquisa.html?categoria=' + selectElement.value
-            window.location.href = url
-        }
     </script>
 </body>
 

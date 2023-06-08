@@ -220,21 +220,7 @@ function getDetalhes() {
         })
 }
 
-function getProductsSearchCategory() {
-    var query = location.search.slice(1);
-
-    var partes = query.split('&');
-    console.log(partes)
-    var valor
-
-    partes.forEach(function (parte) {
-        var chaveValor = parte.split('=');
-        var chave = chaveValor[0];
-        valor = chaveValor[1];
-        console.log(chave)
-        console.log(valor)
-    });
-
+function getProductsSearchCategory(valor) {
     fetch('https://fakestoreapi.com/products/category/' + valor)
         .then(res => res.json())
         .then(json => {
@@ -280,6 +266,61 @@ function getProductsSearchCategory() {
 
                 // Adicionar o card ao container
                 container.appendChild(card)
+            });
+        })
+        .catch(error => {
+            console.log('Ocorreu um erro ao pesquisar pela categoria:', error)
+        })
+}
+
+function getProductsSearchText(valor) {
+    fetch('https://fakestoreapi.com/products')
+        .then(res => res.json())
+        .then(json => {
+            let idContainer = 'containerCardsPesquisa'
+            let container = document.getElementById(idContainer)
+
+            json.forEach(item => {
+                if (item.title.toLowerCase().includes(valor.toLowerCase())) {
+                    // Criar elementos HTML para exibir as informações
+                    let card = document.createElement('div')
+                    card.classList.add('card', 'col-lg-4', 'col-md-4', 'col-sm-6', 'text-center', 'produto', 'produtoClick')
+                    card.setAttribute('data-id', item.id)
+
+                    card.addEventListener('click', function () {
+                        // Obter o ID único do atributo de dados do card
+                        var id = this.getAttribute('data-id');
+                        localStorage.setItem('idDetalhes', id);
+                        var url = './detalhes.html?id=' + id
+                        window.location.href = url;
+                    });
+
+                    let cardBody = document.createElement('div')
+                    cardBody.classList.add('card-body')
+
+                    let imagem = document.createElement('img')
+                    imagem.src = item.image
+                    imagem.alt = item.title
+                    imagem.classList.add('card-img-top')
+
+                    let titulo = document.createElement('h5')
+                    titulo.classList.add('card-title')
+                    titulo.textContent = item.title;
+
+                    let preco = document.createElement('p')
+                    preco.classList.add('card-text')
+                    preco.textContent = 'Preço: $' + item.price
+
+                    // Adicionar elementos ao card
+                    cardBody.appendChild(titulo)
+                    cardBody.appendChild(preco)
+
+                    card.appendChild(imagem)
+                    card.appendChild(cardBody)
+
+                    // Adicionar o card ao container
+                    container.appendChild(card)
+                }
             });
         })
         .catch(error => {

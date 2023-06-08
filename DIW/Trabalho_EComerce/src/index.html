@@ -30,8 +30,8 @@
                 <div class="d-none d-sm-block flex-grow-1 flex-shrink-1">
                     <p class="ms-3">Bem Vindo, ao Portal Tech!</p>
                     <form class="d-flex ms-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-info" type="button">Pesquisar</button>
+                        <input id="CaixaDeBusca" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button onclick="buscarTexto()" class="btn btn-outline-info" type="button">Pesquisar</button>
                     </form>
                 </div>
             </div>
@@ -336,6 +336,12 @@
         function buscarCategoria(){
             let selectElement = document.getElementById('selectTiposProdutos')
             var url = './pesquisa.html?categoria=' + selectElement.value
+            window.location.href = url
+        }
+
+        function buscarTexto(){
+            let search = document.getElementById('CaixaDeBusca')
+            var url = './pesquisa.html?texto=' + search.value
             window.location.href = url
         }
     </script>

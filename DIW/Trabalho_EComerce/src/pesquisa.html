@@ -29,10 +29,10 @@
 
                 <div class="d-none d-sm-block flex-grow-1 flex-shrink-1">
                     <p class="ms-3">Bem Vindo, ao Portal Tech!</p>
-                    <div class="d-flex ms-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-info" type="button">Pesquisar</button>
-                    </div>
+                    <form class="d-flex ms-3" role="search">
+                        <input id="CaixaDeBusca" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button onclick="buscarTexto()" class="btn btn-outline-info" type="button">Pesquisar</button>
+                    </form>
                 </div>
             </div>
 
@@ -50,16 +50,16 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+                                    <a class="nav-link active" aria-current="page" href="#">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="./index.html">Acessar</a>
+                                    <a class="nav-link" href="#">Acessar</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="./index.html">Registrar</a>
+                                    <a class="nav-link" href="#">Registrar</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="./index.html">Conta</a>
+                                    <a class="nav-link" href="#">Conta</a>
                                 </li>
                             </ul>
                         </div>
@@ -214,8 +214,32 @@
     <script src="../script/api.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            getProductsSearchCategory()
+            var query = location.search.slice(1);
+
+            var partes = query.split('&');
+            console.log(partes)
+            var valor
+            var chave
+
+            partes.forEach(function (parte) {
+                var chaveValor = parte.split('=');
+                chave = chaveValor[0];
+                valor = chaveValor[1];
+            });
+
+            if(chave == 'texto'){
+                getProductsSearchText(valor)
+            }
+            else{
+                getProductsSearchCategory(valor)
+            }
         });
+        
+        function buscarTexto(){
+            let search = document.getElementById('CaixaDeBusca')
+            var url = './pesquisa.html?texto=' + search.value
+            window.location.href = url
+        }
     </script>
 </body>
 

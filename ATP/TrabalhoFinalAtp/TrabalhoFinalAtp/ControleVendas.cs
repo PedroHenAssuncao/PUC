@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,217 +8,196 @@ namespace TrabalhoFinalAtp
 {
     public class ControleVendas
     {
-        private int Colunas
+        private readonly string _caminho = "RelatorioVendas.csv";
+
+        private Estoque? _estoque = null;
+
+        private string[,] _relatorioVendas = { };
+
+        private string[,] _relatorioTotalVendas = { };
+
+        public void InicializaEstoque()
         {
-            get
+            _estoque = new Estoque();
+
+            _estoque.InicializaEstoque();
+
+            _relatorioTotalVendas = new string[_estoque.Produtos.Length, _estoque.Produtos.Length];
+
+            for (int i = 0; i < _relatorioTotalVendas.GetLength(0); i++)
             {
-                return VendasMatriz.GetLength(0);
-            }
-        }
-
-        private int Linhas
-        {
-            get
-            {
-                return VendasMatriz.GetLength(1);
-            }
-        }
-
-        private Estoque _estoque;
-
-        public string[,] VendasMatriz { get; private set; } = new string[0, 0];
-
-        public string[,] VendasTotal { get; private set; } = new string[0, 0];
-
-        public ControleVendas(string caminho)
-        {
-            _estoque = new Estoque(caminho);
-            InicializaControleVendas();
-        }
-
-        private void InicializaControleVendas()
-        {
-            VendasTotal = new string[_estoque.Colunas, 3];
-            VendasMatriz = new string[1, _estoque.Colunas + 1];
-
-            VendasMatriz[0, 0] = "Dia";
-
-            for (int i = 0; i < _estoque.Colunas; i++)
-            {
-                var produto = _estoque.Produtos[i].Split(';');
-
-                VendasTotal[i, ((int)DadosProdutos.Id)] = produto[0];
-                VendasTotal[i, ((int)DadosProdutos.Produto)] = produto[1];
-                VendasTotal[i, ((int)DadosProdutos.Quantidade)] = "0";
-
-                VendasMatriz[0,i + 1] = produto[1];
+                _relatorioTotalVendas[i, 0] = _estoque.Produtos[i];
+                _relatorioTotalVendas[i, 1] = "0";
             }
 
-            
+            _relatorioVendas = new string[1, 3];
+
+            _relatorioVendas[0, 0] = "Dia";
+            _relatorioVendas[0, 1] = "Produto";
+            _relatorioVendas[0, 2] = "Quantidade";
         }
 
-        public void RealizaCompra(int id, int qtde, int dia)
+        public bool RegistrarCompra(string produto, int qtde, string dia)
         {
-            if (_estoque.VendaValida(id,qtde))
+            if (_estoque != null)
             {
-                int numProd = 0;
-
-                for (int i = 0; i < _estoque.Colunas; i++)
+                if (Array.IndexOf(_estoque.Produtos, produto) == -1)
                 {
-                    if (VendasTotal[i, (int)DadosProdutos.Id] == id.ToString())
-                    {
-                        VendasTotal[i, (int)DadosProdutos.Quantidade] = (int.Parse(VendasTotal[i, (int)DadosProdutos.Quantidade]) + qtde).ToString();
-                        numProd = i;
-                    } 
+                    Console.WriteLine("O produto não Existe!!");
+                    return false;
                 }
-
-                CadastraNovaVenda(numProd, dia.ToString(), qtde);
-
-                _estoque.RealizaCompra(id,qtde);
-            }
-        }
-
-        public void RealizaCompra(string nomeProduto, int qtde, int dia)
-        {
-            if (_estoque.VendaValida(nomeProduto, qtde))
-            {
-                int numProd = 0;
-                for (int i = 0; i < _estoque.Colunas; i++)
+                else if (!_estoque.VendaPermitida(produto, qtde))
                 {
-                    if (VendasTotal[i, (int)DadosProdutos.Produto].ToLower() == nomeProduto.ToLower())
-                    {
-                        VendasTotal[i, (int)DadosProdutos.Quantidade] = (int.Parse(VendasTotal[i, (int)DadosProdutos.Quantidade]) + qtde).ToString();
-                        numProd = i;
-                    }
+                    Console.WriteLine("Quantidade desejada excede o Estoque!!");
+                    return false;
                 }
-
-                CadastraNovaVenda(numProd, dia.ToString(), qtde);
-
-                _estoque.RealizaCompra(nomeProduto, qtde);
-            }
-        }
-    
-        public void ExibeEstoque()
-        {
-            Console.WriteLine("\n");
-
-            string texto = string.Empty;
-            texto = texto.PadRight(49, '_');
-
-            Console.WriteLine("\t{0}",texto);
-            Console.WriteLine("\t|{0,15}|{1,15}|{2,15}|",DadosProdutos.Id.ToString(),DadosProdutos.Produto.ToString(),DadosProdutos.Quantidade.ToString());
-
-            for (int i = 0; i < _estoque.Colunas; i++)
-            {
-                Console.WriteLine("\t|{0,15}|{1,15}|{2,15}|",
-                    _estoque.EstoqueMatriz[i, (int)DadosProdutos.Id],
-                    _estoque.EstoqueMatriz[i, (int)DadosProdutos.Produto],
-                    _estoque.EstoqueMatriz[i, (int)DadosProdutos.Quantidade]);
-            }
-        }
-
-        public void ExibeVendas()
-        {
-            Console.WriteLine("\n");
-
-            string texto = string.Empty;
-            texto = texto.PadRight(56, '_');
-
-            Console.WriteLine("\t{0}", texto);
-            Console.WriteLine("\t|{0,10}|{1,10}|{2,10}|{3,10}|{4,10}|",
-                "Dia",
-                _estoque.Produtos[0],
-                _estoque.Produtos[1],
-                _estoque.Produtos[2],
-                _estoque.Produtos[3]
-                );
-
-            for (int i = 0; i < Colunas; i++)
-            {
-                Console.WriteLine("\t|{0,10}|{1,10}|{2,10}|{3,10}|{4,10}|",
-                    VendasMatriz[i, 0],
-                    VendasMatriz[i, 1],
-                    VendasMatriz[i, 2],
-                    VendasMatriz[i, 3],
-                    VendasMatriz[i, 4]
-                    );
-            }
-        }
-
-        public void GeraArquivoTotalVendas(string caminho)
-        {
-            if (Path.GetExtension(caminho).Contains("csv"))
-            {
-                using (StreamWriter writer = new StreamWriter(caminho, false))
+                else
                 {
-                    writer.WriteLine(DadosProdutos.Id.ToString() + ";" + DadosProdutos.Produto.ToString() + ";" + DadosProdutos.Quantidade.ToString());
-                    for (int i = 0; i < Colunas; i++)
+                    if (VendaMesmoDiaEProduto(produto, dia))
                     {
-                        writer.WriteLine(string.Join(';', VendasTotal.GetValue(i)));
+                        RealizaVendaDiaEProdutoExiste(produto, dia, qtde);
                     }
+                    else
+                    {
+                        RealizaVenda(produto, dia, qtde);
+                    }
+
+                    AtualizaRelatorioTotalVendas(produto, qtde);
+
+                    _estoque.EfetivaCompra(produto, qtde);
+
+                    return true;
                 }
             }
             else
             {
-                StringBuilder sb = new StringBuilder();
+                Console.WriteLine("Estoque ainda não Inicializado");
 
-                string texto = string.Empty;
-                texto = texto.PadRight(49, '_');
-
-                sb.AppendLine(texto);
-                sb.AppendLine(string.Format("|{0,15}|{1,15}|{2,15}|", DadosProdutos.Id.ToString(), DadosProdutos.Produto.ToString(), DadosProdutos.Quantidade.ToString()));
-
-                for (int i = 0; i < _estoque.Colunas; i++)
-                {
-                    sb.AppendLine(string.Format("|{ 0,15}|{ 1,15}|{ 2,15}| ",
-                                    VendasTotal[i, (int)DadosProdutos.Id],
-                                    VendasTotal[i, (int)DadosProdutos.Produto],
-                                    VendasTotal[i, (int)DadosProdutos.Quantidade]));
-                }
-            }
-            
-        }
-
-        private void CadastraNovaVenda(int numProduto, string dia, int qtde)
-        {
-            bool diaJaCadastrado = false;
-
-            for (int i = 0; i < Colunas; i++)
-            {
-                if (VendasMatriz[i, 0] == dia)
-                {
-                    var aux = VendasMatriz[i, numProduto + 1];
-
-                    VendasMatriz[i, numProduto + 1] = string.IsNullOrEmpty(aux) ? qtde.ToString() : (int.Parse(aux) + qtde).ToString();
-                    diaJaCadastrado = true;
-                }
-            }
-
-            if (diaJaCadastrado == false)
-            {
-                string[,] novaMatriz = new string[Colunas + 1, Linhas];
-
-                PreencheMatriz(novaMatriz);
-
-                for (int i = 0; i < _estoque.Colunas; i++)
-                {
-                    novaMatriz[Colunas + 1, i + 1] = "";
-                }
-
-                novaMatriz[Colunas + 1, 0] = dia;
-                novaMatriz[Colunas + 1, numProduto + 1] = qtde.ToString();
-
-                VendasMatriz = novaMatriz;
+                return false;
             }
         }
 
-        private void PreencheMatriz(string[,] matrizPreencher)
+        public void RelatorioEstoque()
         {
-            for (int i = 0; i < Colunas; i++)
+            if (_estoque != null)
             {
-                for (int j = 0; j < Linhas; j++)
+                _estoque.ImprimirEstoque();
+            }
+            else
+            {
+                Console.WriteLine("O Estoque ainda não foi inicializado!!!");
+            }
+        }
+
+        public void GerarArquivoVendas()
+        {
+            if (_estoque != null)
+            {
+                var relatorio = new StringBuilder();
+
+                for (int i = 0; i < _relatorioVendas.GetLength(0); i++)
                 {
-                    matrizPreencher[i, j] = VendasMatriz[i, j];
+                    relatorio.AppendLine(_relatorioVendas[i,0] + ";" + _relatorioVendas[i, 1] + ";" + _relatorioVendas[i, 2]);
+                }
+
+                using (var stream = new StreamWriter(_caminho,false,Encoding.UTF8))
+                {
+                    stream.Write(relatorio.ToString());
+                }
+            }
+            else
+            {
+                Console.WriteLine("O Estoque ainda não foi inicializado!!!");
+            }
+        }
+
+        public void ImprimirRelatorioVendas()
+        {
+            if (_estoque != null)
+            {
+                for (int i = 0; i < _relatorioVendas.GetLength(0); i++)
+                {
+                    Console.WriteLine(_relatorioVendas[i, 0] + ";" + _relatorioVendas[i, 1] + ";" + _relatorioVendas[i, 2]);
+                }
+            }
+            else
+            {
+                Console.WriteLine("O Estoque ainda não foi inicializado!!!");
+            }
+        }
+
+        public void ImprimirRelatorioVendasTotal()
+        {
+            if (_estoque != null)
+            {
+                Console.WriteLine("Produto     QuantidadeVendida");
+
+                for (int i = 0; i < _relatorioTotalVendas.GetLength(0); i++)
+                {
+                    Console.WriteLine(_relatorioTotalVendas[i, 0] + ";" + _relatorioTotalVendas[i, 1]);
+                }
+            }
+            else
+            {
+                Console.WriteLine("O Estoque ainda não foi inicializado!!!");
+            }
+        }
+
+        private bool VendaMesmoDiaEProduto(string produto, string dia)
+        {
+            for (int i = 0; i < _relatorioVendas.GetLength(0); i++)
+            {
+                if (_relatorioVendas[i, 0] == dia && _relatorioVendas[i, 1] == produto)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void RealizaVendaDiaEProdutoExiste(string produto, string dia, int qtde)
+        {
+            for (int i = 0; i < _relatorioVendas.GetLength(0); i++)
+            {
+                if (_relatorioVendas[i, 0] == dia && _relatorioVendas[i, 1] == produto)
+                {
+                    _relatorioVendas[i, 2] = (int.Parse(_relatorioVendas[i, 2]) + qtde).ToString();
+                }
+            }
+        }
+    
+        private void RealizaVenda(string produto, string dia, int qtde)
+        {
+            var aux = new string[_relatorioVendas.GetLength(0) + 1, 3];
+
+            CopiaMatriz(_relatorioVendas, aux);
+
+            aux[aux.Length - 1,0] = dia;
+            aux[aux.Length - 1,1] = produto;
+            aux[aux.Length - 1,2] = qtde.ToString();
+
+            _relatorioVendas = aux;
+        }
+
+        private void AtualizaRelatorioTotalVendas(string produto, int qtde)
+        {
+            for (int i = 0; i < _relatorioTotalVendas.Length; i++)
+            {
+                if (_relatorioTotalVendas[i,0] == produto)
+                {
+                    _relatorioTotalVendas[i, 1] = (int.Parse(_relatorioTotalVendas[i, 1]) + qtde).ToString();
+                }
+            }
+        }
+
+        private void CopiaMatriz(string[,] matOrigem, string[,] matDestino)
+        {
+            for (int i = 0; i < matOrigem.GetLength(0); i++)
+            {
+                for (int j = 0; j < matOrigem.GetLength(1); j++)
+                {
+                    matDestino[i, j] = matOrigem[i, j];
                 }
             }
         }

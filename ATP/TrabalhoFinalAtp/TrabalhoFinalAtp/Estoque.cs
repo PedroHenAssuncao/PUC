@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,159 +9,115 @@ namespace TrabalhoFinalAtp
 {
     public class Estoque
     {
-        private string _caminhoDados = string.Empty;
+        private string _caminho = "estoque.txt";
 
-        public int Colunas
-        {
-            get
-            {
-                return EstoqueMatriz.GetLength(0);
-            }
-        }
+        public string[] Produtos { get; private set; } = Array.Empty<string>();
+        public int[] Quantidade { get; private set; } = Array.Empty<int>();
 
-        public int Linhas 
-        { 
-            get 
-            {
-                return EstoqueMatriz.GetLength(1);
-            } 
-        }
-
-        public string[,] EstoqueMatriz { get; private set; } = new string[0,0];
-
-        public string[] Produtos { get; private set; } = new string[0];
-
-        public Estoque(string caminho) { 
-        
-            _caminhoDados = caminho;
-            InicializaEstoque();
-        }
-
-        public void RecuperaDados()
+        public void InicializaEstoque()
         {
             try
             {
-                var conteudo = string.Empty;
+                string estoque = string.Empty;
+                int i = 0;
 
-                using (StreamReader reader = new StreamReader(_caminhoDados))
+                using (var stream = new StreamReader(_caminho))
                 {
-                    conteudo = reader.ReadToEnd();
+                    estoque = stream.ReadToEnd();
                 }
 
-                var numColunas = conteudo.Split('\n').Count();
+                var aux = estoque.Split('\n');
 
-                EstoqueMatriz = new string[numColunas,Enum.GetValues(typeof(DadosProdutos)).Length];
+                Produtos = new string[aux.Length - 1];
+                Quantidade = new int[aux.Length - 1];
 
-                PreencheMatriz(conteudo);
-
-                AtualizaVetorProdutos();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public bool VendaValida(int id, int qtde)
-        {
-            for (int i = 0; i < Colunas; i++)
-            {
-                if (EstoqueMatriz[i, (int)DadosProdutos.Id] == id.ToString())
+                foreach (var linha in aux)
                 {
-                    if (qtde < int.Parse(EstoqueMatriz[i, (int)DadosProdutos.Quantidade]))
+                    if (linha != null)
                     {
-                        return true;
+                        var produto = linha.Split(';');
+                        int qtde = 0;
+
+                        if (int.TryParse(produto[1], out qtde))
+                        {
+                            Produtos[i] = produto[0];
+                            Quantidade[i] = qtde;
+
+                            i++;
+                        }
                     }
                 }
             }
-
-            return false;
-        }
-
-        public bool VendaValida(string nomeProduto, int qtde)
-        {
-            for (int i = 0; i < Colunas; i++)
-            {
-                if (EstoqueMatriz[i, (int)DadosProdutos.Produto].ToLower() == nomeProduto.ToLower())
-                {
-                    if (qtde < int.Parse(EstoqueMatriz[i, (int)DadosProdutos.Quantidade]))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public void RealizaCompra(int id, int qtde)
-        {
-            for (int i = 0; i < Colunas; i++)
-            {
-                if (EstoqueMatriz[i, (int)DadosProdutos.Id] == id.ToString())
-                {
-                    var aux = EstoqueMatriz[i, (int)DadosProdutos.Quantidade];
-                    EstoqueMatriz[i,(int)DadosProdutos.Quantidade] = (int.Parse(aux) - qtde).ToString();
-                }
+            catch(Exception ex) {
+            
             }
         }
 
-        public void RealizaCompra(string nomeProduto, int qtde)
+        public bool VendaPermitida(string produto, int qtde)
         {
-            for (int i = 0; i < Colunas; i++)
+            if (Produtos != Array.Empty<string>() && Quantidade != Array.Empty<int>())
             {
-                if (EstoqueMatriz[i, (int)DadosProdutos.Produto].ToLower() == nomeProduto.ToLower())
+                int index = Array.IndexOf(Produtos, produto);
+
+                if (index == -1)
                 {
-                    var aux = EstoqueMatriz[i, (int)DadosProdutos.Quantidade];
-                    EstoqueMatriz[i, (int)DadosProdutos.Quantidade] = (int.Parse(aux) - qtde).ToString();
+                    return false;
+                }
+                else
+                {
+                    return Quantidade[index] - qtde > 0 ? true : false;
                 }
             }
-        }
-
-        private void InicializaEstoque()
-        {
-            if (!File.Exists(_caminhoDados))
+            else
             {
-                throw new Exception("O arquivo não existe");
-            }
-
-            RecuperaDados();
-        }
-
-        public void AtualizaArquivo()
-        {
-            using (StreamWriter writer = new StreamWriter(_caminhoDados,false))
-            {
-                for (int i = 0; i < Colunas; i++)
-                {
-                    writer.WriteLine(string.Join(';', EstoqueMatriz.GetValue(i)));
-                }
-            }
-        }
-
-        private void PreencheMatriz(string conteudo)
-        {
-            var colunas = conteudo.Split('\n');
-
-            for (int i = 0; i < colunas.Length; i++)
-            {
-                var linhas = colunas[i].Split(';');
-
-                for (int j = 0; j < linhas.Length; j++)
-                {
-                    EstoqueMatriz[i, j] = linhas[j];
-                }
+                return false;
             }
         }
     
-        private void AtualizaVetorProdutos()
+        public bool EfetivaCompra(string produto, int qtde)
         {
-            Produtos = new string[Colunas];
+            int index = Array.IndexOf(Produtos, produto);
 
-            for (int i = 0; i < Colunas; i++)
+            if (index == -1)
             {
-                Produtos[i] = EstoqueMatriz[i, (int)DadosProdutos.Id] + ";" + EstoqueMatriz[i, (int)DadosProdutos.Produto];
+                return false;
             }
+            else
+            {
+                Quantidade[index] -= qtde;
+
+                SalvarEstoque();
+
+                return true;
+            }
+        }
+    
+        public void SalvarEstoque()
+        {
+            var estoque = new StringBuilder();
+
+            estoque.AppendLine("Produtos;Quantidade");
+
+            for (int i = 0; i < Produtos.Length; i++)
+            {
+                estoque.AppendLine(Produtos[i] + ":" + Quantidade[i]);
+            }
+
+            using (var stream = new StreamWriter(_caminho, false, Encoding.UTF8))
+            {
+                stream.Write(estoque.ToString());
+            }
+            
+        }
+
+        public void ImprimirEstoque()
+        {
+            Console.WriteLine("Produtos     Quantidade");
+            for (int i = 0; i < Produtos.Length; i++)
+            {
+                Console.WriteLine(Produtos[i] + "    " + Quantidade[i]);
+            }
+            
         }
     }
 }

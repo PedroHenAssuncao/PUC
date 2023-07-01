@@ -112,10 +112,13 @@ namespace TrabalhoFinalAtp
 
         public void ImprimirEstoque()
         {
-            Console.WriteLine("Produtos     Quantidade");
+            string texto = string.Empty;
+            texto = texto.PadRight(22, '_');
+            Console.WriteLine(texto);
+            Console.WriteLine(string.Format("|{0,-10}{1,-10}|", "Produtos", "Quantidade") + "\t");
             for (int i = 0; i < Produtos.Length; i++)
             {
-                Console.WriteLine(Produtos[i] + "    " + Quantidade[i]);
+                Console.Write(string.Format("|{0,-10}{1,-10}|", Produtos[i], Quantidade[i]) + "\t");
             }
             
         }

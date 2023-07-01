@@ -77,6 +77,27 @@ namespace TrabalhoFinalAtp
             }
         }
 
+        public bool RegistrarCompra(int produto, int qtde, string dia)
+        {
+            if (_estoque != null)
+            {
+                if (produto > _estoque.Produtos.Length)
+                {
+                    Console.WriteLine("O número do produto não existe!!!");
+
+                    return false;
+                }
+
+                return RegistrarCompra(_estoque.Produtos[produto], qtde, dia);
+            }
+             else
+            {
+                Console.WriteLine("Estoque ainda não Inicializado");
+
+                return false;
+            }
+        }
+
         public void RelatorioEstoque()
         {
             if (_estoque != null)
@@ -115,9 +136,13 @@ namespace TrabalhoFinalAtp
         {
             if (_estoque != null)
             {
+                string texto = string.Empty;
+                texto = texto.PadRight(32, '_');
+                Console.WriteLine(texto);
+                Console.WriteLine(string.Format("|{0,-10}{1,-10}{2,-10}|", "Dia", "Produto", "Quantidade") + "\t");
                 for (int i = 0; i < _relatorioVendas.GetLength(0); i++)
                 {
-                    Console.WriteLine(_relatorioVendas[i, 0] + ";" + _relatorioVendas[i, 1] + ";" + _relatorioVendas[i, 2]);
+                    Console.Write(string.Format("|{0,-10}{1,-10}{2,-10}|", _relatorioVendas[i, 0], _relatorioVendas[i, 1], _relatorioVendas[i, 2]) + "\t");
                 }
             }
             else
@@ -130,11 +155,34 @@ namespace TrabalhoFinalAtp
         {
             if (_estoque != null)
             {
-                Console.WriteLine("Produto     QuantidadeVendida");
+                string texto = string.Empty;
+                texto = texto.PadRight(22, '_');
+                Console.WriteLine(texto);
+                Console.WriteLine(string.Format("|{0,-10}{1,-10}|", "Produto", "Quantidade") + "\t");
 
                 for (int i = 0; i < _relatorioTotalVendas.GetLength(0); i++)
                 {
-                    Console.WriteLine(_relatorioTotalVendas[i, 0] + ";" + _relatorioTotalVendas[i, 1]);
+                    Console.Write(string.Format("|{0,-10}{1,-10}|", _relatorioTotalVendas[i, 0], _relatorioTotalVendas[i, 1]) + "\t");
+                }
+            }
+            else
+            {
+                Console.WriteLine("O Estoque ainda não foi inicializado!!!");
+            }
+        }
+
+        public void ExibirProdutosEmEstoque()
+        {
+            if (_estoque != null)
+            {
+                string texto = string.Empty;
+                texto = texto.PadRight(22, '_');
+                Console.WriteLine(texto);
+                Console.WriteLine(string.Format("|{0,-10}{1,-10}|", "Produto", "Quantidade") + "\t");
+
+                for (int i = 0; i < _estoque.Produtos.Length; i++)
+                {
+                    Console.Write(string.Format("|{0,-10}{1,-10}{2,-10}|", i+1,_relatorioTotalVendas[i, 0], _relatorioTotalVendas[i, 1]) + "\t");
                 }
             }
             else

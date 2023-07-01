@@ -14,6 +14,7 @@ namespace TrabalhoFinalAtp
         {
             bool sair = false;
             int opcao = 0;
+            bool sistemaIniciou = false;
 
             while (sair == false)
             {
@@ -40,83 +41,132 @@ namespace TrabalhoFinalAtp
                             Console.WriteLine("=========== IMPORTAR ARQUIVO DE PRODUTOS ===========");
                             Console.WriteLine();
 
-                            _controleVendas.InicializaEstoque();
+                            sistemaIniciou = _controleVendas.InicializaEstoque();
 
-                            Console.WriteLine("Arquivo importado com sucesso!");
-                            Console.WriteLine();
+                            if (sistemaIniciou == true)
+                            {
+                                Console.WriteLine("Arquivo importado com sucesso!");
+                                Console.WriteLine();
+                            }
+
                             break;
                         case 2:
-                            int numProd = 0;
-                            int qtde = 0;
-                            string nomeProduto = string.Empty;
-                            string dia = string.Empty;
 
-                            Console.WriteLine("=========== REGISTRAR VENDA ===========");
-                            Console.WriteLine();
-
-                            _controleVendas.ExibirProdutosEmEstoque();
-
-
-                            Console.Write("Digite o número ou o nome do produto: ");
-                            nomeProduto = Console.ReadLine();
-
-                            Console.Write("Digite o dia do mês em que foi realizada a venda: ");
-                            dia = Console.ReadLine();
-
-                            Console.Write("Digite a quantidade vendida do produto: ");
-                            qtde = int.Parse(Console.ReadLine());
-
-                            if (int.TryParse(nomeProduto, out numProd))
+                            if (sistemaIniciou == true)
                             {
-                                _controleVendas.RegistrarCompra(numProd, qtde, dia);
+                                int numProd = 0;
+                                int qtde = 0;
+                                string nomeProduto = string.Empty;
+                                string dia = string.Empty;
+
+                                Console.WriteLine("=========== REGISTRAR VENDA ===========");
+                                Console.WriteLine();
+
+
+
+                                _controleVendas.ExibirProdutosEmEstoque();
+
+
+                                Console.Write("Digite o número ou o nome do produto: ");
+                                nomeProduto = Console.ReadLine();
+
+                                Console.Write("Digite o dia do mês em que foi realizada a venda: ");
+                                dia = Console.ReadLine();
+
+                                Console.Write("Digite a quantidade vendida do produto: ");
+                                qtde = int.Parse(Console.ReadLine());
+
+                                if (int.TryParse(nomeProduto, out numProd))
+                                {
+                                    _controleVendas.RegistrarCompra(numProd, qtde, dia);
+                                }
+                                else
+                                {
+                                    _controleVendas.RegistrarCompra(nomeProduto, qtde, dia);
+                                }
+
+                                Console.WriteLine();
                             }
                             else
                             {
-                                _controleVendas.RegistrarCompra(nomeProduto, qtde, dia);
+                                Console.WriteLine("O estoque ainda não foi iniciado!!");
                             }
 
-                            Console.WriteLine();
                             break;
                         case 3:
-                            Console.WriteLine("==================== RELATORIO DE VENDAS ====================");
-                            Console.WriteLine();
 
-                            _controleVendas.ImprimirRelatorioVendas();
+                            if (sistemaIniciou == true)
+                            {
+                                Console.WriteLine("==================== RELATORIO DE VENDAS ====================");
+                                Console.WriteLine();
 
-                            Console.WriteLine();
+                                _controleVendas.ImprimirRelatorioVendas();
+
+                                Console.WriteLine();
+                            }
+                            else
+                            {
+                                Console.WriteLine("O estoque ainda não foi iniciado!!");
+                            }
+
                             break;
                         case 4:
-                            Console.WriteLine("=========== RELATÓRIO DE ESTOQUE ===========");
-                            Console.WriteLine();
 
-                            _controleVendas.RelatorioEstoque();
+                            if (sistemaIniciou == true)
+                            {
+                                Console.WriteLine("=========== RELATÓRIO DE ESTOQUE ===========");
+                                Console.WriteLine();
 
-                            Console.WriteLine();
+                                _controleVendas.RelatorioEstoque();
+
+                                Console.WriteLine();
+                            }
+                            else
+                            {
+                                Console.WriteLine("O estoque ainda não foi iniciado!!");
+                            }
+
                             break;
 
                         case 5:
-                            Console.WriteLine("=========== CRIAR ARQUIVO DE VENDAS ===========");
-                            Console.WriteLine();
 
-                            _controleVendas.GerarArquivoVendas();
+                            if (sistemaIniciou == true)
+                            {
+                                Console.WriteLine("=========== CRIAR ARQUIVO DE VENDAS ===========");
+                                Console.WriteLine();
 
-                            Console.WriteLine("Arquivo gerado com sucesso");
+                                _controleVendas.GerarArquivoVendas();
+
+                                Console.WriteLine("Arquivo gerado com sucesso");
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("O estoque ainda não foi iniciado!!");
+                            }
+
                             break;
-
                         case 6:
-                            Console.WriteLine("=========== RELATÓRIO VENDAS TOTAIS ===========");
-                            Console.WriteLine();
 
-                            _controleVendas.ImprimirRelatorioVendasTotal();
+                            if (sistemaIniciou == true)
+                            {
+                                Console.WriteLine("=========== RELATÓRIO VENDAS TOTAIS ===========");
+                                Console.WriteLine();
 
-                            Console.WriteLine("Arquivo gerado com sucesso");
+                                _controleVendas.ImprimirRelatorioVendasTotal();
+
+                                Console.WriteLine("Arquivo gerado com sucesso");
+                            }
+                            else
+                            {
+                                Console.WriteLine("O estoque ainda não foi iniciado!!");
+                            }
+
                             break;
-
                         case 7:
                             Console.WriteLine("============== ENCERRANDO ==============");
                             sair = true;
                             break;
-
                         default:
                             Console.WriteLine("Opção inválida. Tente novamente!");
                             Console.WriteLine();

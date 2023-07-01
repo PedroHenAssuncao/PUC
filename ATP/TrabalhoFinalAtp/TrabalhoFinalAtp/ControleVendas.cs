@@ -8,7 +8,7 @@ namespace TrabalhoFinalAtp
 {
     public class ControleVendas
     {
-        private readonly string _caminho = "RelatorioVendas.csv";
+        private readonly string _caminho = "D:\\Desenvolvimento\\Puc\\ATP\\TrabalhoFinalAtp\\TrabalhoFinalAtp\\ArquivosEstoqueEVendas\\RelatorioVendas.csv";
 
         private Estoque? _estoque = null;
 
@@ -16,25 +16,32 @@ namespace TrabalhoFinalAtp
 
         private string[,] _relatorioTotalVendas = { };
 
-        public void InicializaEstoque()
+        public bool InicializaEstoque()
         {
             _estoque = new Estoque();
 
-            _estoque.InicializaEstoque();
+            var estoqueInciciou = _estoque.InicializaEstoque();
 
-            _relatorioTotalVendas = new string[_estoque.Produtos.Length, _estoque.Produtos.Length];
-
-            for (int i = 0; i < _relatorioTotalVendas.GetLength(0); i++)
+            if (estoqueInciciou == true)
             {
-                _relatorioTotalVendas[i, 0] = _estoque.Produtos[i];
-                _relatorioTotalVendas[i, 1] = "0";
+                _relatorioTotalVendas = new string[_estoque.Produtos.Length, _estoque.Produtos.Length];
+
+                for (int i = 0; i < _relatorioTotalVendas.GetLength(0); i++)
+                {
+                    _relatorioTotalVendas[i, 0] = _estoque.Produtos[i];
+                    _relatorioTotalVendas[i, 1] = "0";
+                }
+
+                _relatorioVendas = new string[1, 3];
+
+                _relatorioVendas[0, 0] = "Dia";
+                _relatorioVendas[0, 1] = "Produto";
+                _relatorioVendas[0, 2] = "Quantidade";
+
+                return true;
             }
 
-            _relatorioVendas = new string[1, 3];
-
-            _relatorioVendas[0, 0] = "Dia";
-            _relatorioVendas[0, 1] = "Produto";
-            _relatorioVendas[0, 2] = "Quantidade";
+            return false;
         }
 
         public bool RegistrarCompra(string produto, int qtde, string dia)
@@ -88,7 +95,7 @@ namespace TrabalhoFinalAtp
                     return false;
                 }
 
-                return RegistrarCompra(_estoque.Produtos[produto], qtde, dia);
+                return RegistrarCompra(_estoque.Produtos[produto - 1], qtde, dia);
             }
              else
             {
@@ -137,12 +144,11 @@ namespace TrabalhoFinalAtp
             if (_estoque != null)
             {
                 string texto = string.Empty;
-                texto = texto.PadRight(32, '_');
+                texto = texto.PadRight(36, '_');
                 Console.WriteLine(texto);
-                Console.WriteLine(string.Format("|{0,-10}{1,-10}{2,-10}|", "Dia", "Produto", "Quantidade") + "\t");
                 for (int i = 0; i < _relatorioVendas.GetLength(0); i++)
                 {
-                    Console.Write(string.Format("|{0,-10}{1,-10}{2,-10}|", _relatorioVendas[i, 0], _relatorioVendas[i, 1], _relatorioVendas[i, 2]) + "\t");
+                    Console.WriteLine(string.Format("|{0,-10}| {1,-10}| {2,10}|", _relatorioVendas[i, 0], _relatorioVendas[i, 1], _relatorioVendas[i, 2]) + "\t");
                 }
             }
             else
@@ -156,13 +162,13 @@ namespace TrabalhoFinalAtp
             if (_estoque != null)
             {
                 string texto = string.Empty;
-                texto = texto.PadRight(22, '_');
+                texto = texto.PadRight(24, '_');
                 Console.WriteLine(texto);
-                Console.WriteLine(string.Format("|{0,-10}{1,-10}|", "Produto", "Quantidade") + "\t");
+                Console.WriteLine(string.Format("|{0,-10}| {1,10}|", "Produto", "Quantidade") + "\t");
 
                 for (int i = 0; i < _relatorioTotalVendas.GetLength(0); i++)
                 {
-                    Console.Write(string.Format("|{0,-10}{1,-10}|", _relatorioTotalVendas[i, 0], _relatorioTotalVendas[i, 1]) + "\t");
+                    Console.WriteLine(string.Format("|{0,-10}| {1,-10}|", _relatorioTotalVendas[i, 0], _relatorioTotalVendas[i, 1]) + "\t");
                 }
             }
             else
@@ -176,13 +182,13 @@ namespace TrabalhoFinalAtp
             if (_estoque != null)
             {
                 string texto = string.Empty;
-                texto = texto.PadRight(22, '_');
+                texto = texto.PadRight(36, '_');
                 Console.WriteLine(texto);
-                Console.WriteLine(string.Format("|{0,-10}{1,-10}|", "Produto", "Quantidade") + "\t");
+                Console.WriteLine(string.Format("|{0,-10}| {1,-10}| {2,10}|", "ID", "Produtos", "Quantidade") + "\t");
 
                 for (int i = 0; i < _estoque.Produtos.Length; i++)
                 {
-                    Console.Write(string.Format("|{0,-10}{1,-10}{2,-10}|", i+1,_relatorioTotalVendas[i, 0], _relatorioTotalVendas[i, 1]) + "\t");
+                    Console.WriteLine(string.Format("|{0,-10}| {1,-10}| {2,-10}|", i+1,_estoque.Produtos[i], _estoque.Quantidade[i]) + "\t");
                 }
             }
             else
@@ -221,16 +227,16 @@ namespace TrabalhoFinalAtp
 
             CopiaMatriz(_relatorioVendas, aux);
 
-            aux[aux.Length - 1,0] = dia;
-            aux[aux.Length - 1,1] = produto;
-            aux[aux.Length - 1,2] = qtde.ToString();
+            aux[aux.GetLength(0) - 1,0] = dia;
+            aux[aux.GetLength(0) - 1, 1] = produto;
+            aux[aux.GetLength(0) - 1,2] = qtde.ToString();
 
             _relatorioVendas = aux;
         }
 
         private void AtualizaRelatorioTotalVendas(string produto, int qtde)
         {
-            for (int i = 0; i < _relatorioTotalVendas.Length; i++)
+            for (int i = 0; i < _relatorioTotalVendas.GetLength(0); i++)
             {
                 if (_relatorioTotalVendas[i,0] == produto)
                 {

@@ -9,12 +9,12 @@ namespace TrabalhoFinalAtp
 {
     public class Estoque
     {
-        private string _caminho = "estoque.txt";
+        private string _caminho = "D:\\Desenvolvimento\\Puc\\ATP\\TrabalhoFinalAtp\\TrabalhoFinalAtp\\ArquivosEstoqueEVendas\\Estoque.csv";
 
         public string[] Produtos { get; private set; } = Array.Empty<string>();
         public int[] Quantidade { get; private set; } = Array.Empty<int>();
 
-        public void InicializaEstoque()
+        public bool InicializaEstoque()
         {
             try
             {
@@ -23,7 +23,7 @@ namespace TrabalhoFinalAtp
 
                 using (var stream = new StreamReader(_caminho))
                 {
-                    estoque = stream.ReadToEnd();
+                    estoque = stream.ReadToEnd().Replace("\r", "");
                 }
 
                 var aux = estoque.Split('\n');
@@ -47,9 +47,14 @@ namespace TrabalhoFinalAtp
                         }
                     }
                 }
+
+                return true;
             }
-            catch(Exception ex) {
-            
+            catch(System.IO.FileNotFoundException ex) {
+                Console.WriteLine("Arquivo de Estoque não Existe!!");
+                Console.WriteLine("Por favor crie e tente novamente!!");
+
+                return false;
             }
         }
 
@@ -86,7 +91,7 @@ namespace TrabalhoFinalAtp
             {
                 Quantidade[index] -= qtde;
 
-                SalvarEstoque();
+                //SalvarEstoque();
 
                 return true;
             }
@@ -100,7 +105,15 @@ namespace TrabalhoFinalAtp
 
             for (int i = 0; i < Produtos.Length; i++)
             {
-                estoque.AppendLine(Produtos[i] + ":" + Quantidade[i]);
+                if (i == Produtos.Length - 1)
+                {
+                    estoque.Append(Produtos[i] + ";" + Quantidade[i]);
+                }
+                else
+                {
+                    estoque.AppendLine(Produtos[i] + ";" + Quantidade[i]);
+                }
+               
             }
 
             using (var stream = new StreamWriter(_caminho, false, Encoding.UTF8))
@@ -113,12 +126,12 @@ namespace TrabalhoFinalAtp
         public void ImprimirEstoque()
         {
             string texto = string.Empty;
-            texto = texto.PadRight(22, '_');
+            texto = texto.PadRight(24, '_');
             Console.WriteLine(texto);
-            Console.WriteLine(string.Format("|{0,-10}{1,-10}|", "Produtos", "Quantidade") + "\t");
+            Console.WriteLine(string.Format("|{0,-10}| {1,10}|", "Produtos", "Quantidade") + "\t");
             for (int i = 0; i < Produtos.Length; i++)
             {
-                Console.Write(string.Format("|{0,-10}{1,-10}|", Produtos[i], Quantidade[i]) + "\t");
+                Console.WriteLine(string.Format("|{0,-10}| {1,-10}|", Produtos[i], Quantidade[i]) + "\t");
             }
             
         }

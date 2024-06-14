@@ -24,9 +24,9 @@ internal class Program
     private static void ConfigureServices(IServiceCollection serviceCollection)
     {
         
-        serviceCollection.AddSingleton<IIngredientRepository, IngredientRepository>()
-                        .AddSingleton<IRecipeRepository, RecipeRepository>()
-                        .AddSingleton<IRecipeIngredientRepository, RecipeIngredientRepository>();
+        serviceCollection.AddScoped<IIngredientRepository, IngredientRepository>()
+                        .AddScoped<IRecipeRepository, RecipeRepository>()
+                        .AddScoped<IRecipeIngredientRepository, RecipeIngredientRepository>();
 
     }
 }

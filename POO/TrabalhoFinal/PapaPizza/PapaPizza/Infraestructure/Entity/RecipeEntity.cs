@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PapaPizza.Infraestructure.Entity
 {
-    public class Recipe : EntityBase
+    public class RecipeEntity : EntityBase
     {
         public string Name { get; set; } = string.Empty;
 
@@ -15,5 +15,16 @@ namespace PapaPizza.Infraestructure.Entity
 
         public int DurationInMinutes { get; set; } = 0;
 
+        public static RecipeEntity CreateRecipe(string[] fields)
+        {
+            var result = new RecipeEntity();
+
+            result.Id = Guid.Parse(fields[0]);
+            result.Name = fields[1];
+            result.Description = fields[2];
+            result.DurationInMinutes = int.Parse(fields[3]);
+
+            return result;
+        }
     }
 }

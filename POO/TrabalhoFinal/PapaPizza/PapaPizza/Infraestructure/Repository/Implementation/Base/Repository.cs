@@ -15,9 +15,13 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
 
         private string _path = string.Empty;
 
-        protected Repository(string classeName)
+        private string _classe;
+
+        protected Repository()
         {
-            _path = string.Format(_basePath, classeName);
+            TEntity aux = new TEntity();
+            _classe = aux.GetType().Name;
+            _path = string.Format(_basePath, _classe.Replace("Entity",""));
         }
 
         public TEntity Create(TEntity entity)

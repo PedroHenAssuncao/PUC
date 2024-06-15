@@ -24,7 +24,7 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
             _path = string.Format(_basePath, _classe.Replace("Entity",""));
         }
 
-        public TEntity Create(TEntity entity)
+        public virtual TEntity Create(TEntity entity)
         {
             string parsedEntity = Parse(entity);
 
@@ -36,7 +36,30 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
             return entity;
         }
 
-        public bool Delete(Guid id)
+        public virtual bool Delete(string name)
+        {
+            string[] data = File.ReadAllLines(_path);
+            List<string> updatedData = new List<string>();
+            bool deleted = false;
+
+            foreach (string line in data)
+            {
+                if (!line.Contains(name))
+                {
+                    updatedData.Add(line);
+                }
+                else
+                {
+                    deleted = true;
+                }
+            }
+
+            File.WriteAllLines(_path, updatedData);
+
+            return deleted;
+        }
+
+        public virtual bool Delete(Guid id)
         {
             string[] data = File.ReadAllLines(_path);
             List<string> updatedData = new List<string>();
@@ -64,7 +87,7 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
             
         }
 
-        public bool Exists(Guid id)
+        public virtual bool Exists(Guid id)
         {
             string[] data = File.ReadAllLines(_path);
 
@@ -81,7 +104,7 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
             return exist;
         }
 
-        public IEnumerable<TEntity> FindAll()
+        public virtual IEnumerable<TEntity> FindAll()
         {
             List<TEntity> entities = new List<TEntity>();
 
@@ -95,7 +118,22 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
             return entities;
         }
 
-        public TEntity? FindById(Guid id)
+        public virtual TEntity? FindByName(string name)
+        {
+            string[] data = File.ReadAllLines(_path);
+
+            foreach (string line in data)
+            {
+                if (line.Contains(name))
+                {
+                    return Parse(line);
+                }
+            }
+
+            return null;
+        }
+
+        public virtual TEntity? FindById(Guid id)
         {
             string[] data = File.ReadAllLines(_path);
 
@@ -110,7 +148,7 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
             return null;
         }
 
-        public TEntity Update(TEntity entity)
+        public virtual TEntity Update(TEntity entity)
         {
             string[] data = File.ReadAllLines(_path);
             List<string> updatedData = new List<string>();
@@ -130,8 +168,8 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
             return entity;
         }
 
-        protected abstract TEntity? Parse(string objectString);
+        public abstract TEntity? Parse(string objectString);
 
-        protected abstract string Parse(TEntity objectToParse);
+        public abstract string Parse(TEntity objectToParse);
     }
 }

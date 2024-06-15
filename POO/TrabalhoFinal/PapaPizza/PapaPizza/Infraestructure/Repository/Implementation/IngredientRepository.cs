@@ -11,14 +11,14 @@ namespace PapaPizza.Infraestructure.Repository.Implementation
 {
     public class IngredientRepository : Repository<IngredientEntity>, IIngredientRepository
     {
-        protected override IngredientEntity? Parse(string objectString)
+        public override IngredientEntity? Parse(string objectString)
         {
             return IngredientEntity.CreateIngredient(objectString.Split(';'));
         }
 
-        protected override string Parse(IngredientEntity objectToParse)
+        public override string Parse(IngredientEntity objectToParse)
         {
-            return $"{objectToParse.Id};{objectToParse.Name};{objectToParse.Amount}";
+            return $"{objectToParse.Id};{objectToParse.Name}";
         }
     }
 }

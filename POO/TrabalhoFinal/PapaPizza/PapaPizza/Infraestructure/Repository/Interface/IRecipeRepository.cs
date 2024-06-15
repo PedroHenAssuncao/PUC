@@ -10,5 +10,6 @@ namespace PapaPizza.Infraestructure.Repository.Interface
 {
     public interface IRecipeRepository : IRepository<RecipeEntity>
     {
+        List<IngredientEntity> GetIngredients(string recipeName);
     }
 }

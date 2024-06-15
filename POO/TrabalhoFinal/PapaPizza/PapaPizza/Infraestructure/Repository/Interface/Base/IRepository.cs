@@ -11,14 +11,20 @@ namespace PapaPizza.Infraestructure.Repository.Interface.Base
     {
         IEnumerable<TEntity> FindAll();
 
+        TEntity? FindByName(string name);
+
         TEntity? FindById(Guid id);
 
         TEntity Create(TEntity entity);
 
         TEntity Update(TEntity entity);
 
+        bool Delete(string nome);
+
         bool Delete(Guid id);
 
         bool Exists(Guid id);
+        TEntity? Parse(string objectString);
+        string Parse(TEntity objectToParse);
     }
 }

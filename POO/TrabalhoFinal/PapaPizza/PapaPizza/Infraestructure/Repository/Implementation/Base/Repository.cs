@@ -4,14 +4,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PapaPizza.Infraestructure.Repository.Implementation.Base
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityBase, new()
     {
-        private readonly string _basePath = "PapaPizza.Resources.{0}.csv";
+        private readonly string _basePath = "..\\..\\..\\Resources\\{0}.csv";
 
         private string _path = string.Empty;
 
@@ -21,7 +23,7 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
         {
             TEntity aux = new TEntity();
             _classe = aux.GetType().Name;
-            _path = string.Format(_basePath, _classe.Replace("Entity",""));
+            _path = string.Format( _basePath, _classe.Replace("Entity", "")) ;
         }
 
         public virtual TEntity Create(TEntity entity)
@@ -31,6 +33,7 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
             using (StreamWriter dataBase = new StreamWriter(_path))
             {
                 dataBase.WriteLine(parsedEntity);
+                dataBase.Close();
             }
 
             return entity;
@@ -38,30 +41,35 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
 
         public virtual bool Delete(string name)
         {
-            string[] data = File.ReadAllLines(_path);
+            string[] data = readFromAssembly();
             List<string> updatedData = new List<string>();
             bool deleted = false;
 
             foreach (string line in data)
             {
-                if (!line.Contains(name))
+                if (!string.IsNullOrEmpty(line))
                 {
-                    updatedData.Add(line);
-                }
-                else
-                {
-                    deleted = true;
+                    var aux = line.Split(";");
+                    if (!(aux[0].ToLower() == name.ToLower()))
+                    {
+                        updatedData.Add(line);
+                    }
+                    else
+                    {
+                        deleted = true;
+                    }
                 }
             }
 
-            File.WriteAllLines(_path, updatedData);
+            clearAllDataFromAssembly();
+            writeInAssembly(updatedData);
 
             return deleted;
         }
 
         public virtual bool Delete(Guid id)
         {
-            string[] data = File.ReadAllLines(_path);
+            string[] data = readFromAssembly();
             List<string> updatedData = new List<string>();
             bool deleted = false;
 
@@ -77,7 +85,8 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
                 }
             }
 
-            File.WriteAllLines(_path, updatedData);
+            clearAllDataFromAssembly();
+            writeInAssembly(updatedData);
 
             return deleted;
         }
@@ -87,32 +96,18 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
             
         }
 
-        public virtual bool Exists(Guid id)
-        {
-            string[] data = File.ReadAllLines(_path);
-
-            bool exist = false;
-
-            foreach (string line in data)
-            {
-                if (line.Contains(id.ToString()))
-                {
-                    exist = true;
-                }
-            }
-
-            return exist;
-        }
-
         public virtual IEnumerable<TEntity> FindAll()
         {
             List<TEntity> entities = new List<TEntity>();
 
-            string[] data = File.ReadAllLines(_path);
+            string[] data = readFromAssembly();
 
             foreach (string line in data)
             {
-                entities.Add(Parse(line));
+                if (!string.IsNullOrEmpty(line))
+                {
+                    entities.Add(Parse(line));
+                }
             }
 
             return entities;
@@ -120,13 +115,18 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
 
         public virtual TEntity? FindByName(string name)
         {
-            string[] data = File.ReadAllLines(_path);
+            string[] data = readFromAssembly();
 
             foreach (string line in data)
             {
-                if (line.Contains(name))
+                if (!string.IsNullOrEmpty(line))
                 {
-                    return Parse(line);
+                    var aux = line.Split(";");
+
+                    if (aux[0].ToLower() == name.ToLower())
+                    {
+                        return Parse(line);
+                    }
                 }
             }
 
@@ -135,7 +135,7 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
 
         public virtual TEntity? FindById(Guid id)
         {
-            string[] data = File.ReadAllLines(_path);
+            string[] data = readFromAssembly();
 
             foreach (string line in data)
             {
@@ -148,24 +148,35 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
             return null;
         }
 
-        public virtual TEntity Update(TEntity entity)
+        private string[] readFromAssembly()
         {
-            string[] data = File.ReadAllLines(_path);
-            List<string> updatedData = new List<string>();
+            string[] data = null;
 
-            foreach (string line in data)
+            using (StreamReader reader = new StreamReader(_path))
             {
-                if (line.Contains(entity.Id.ToString()))
-                {
-                    updatedData.Add(Parse(entity));
-                }
-                else
-                {
-                    updatedData.Add(line);
-                }
+                data = reader.ReadToEnd().Trim().Split("\n");
+                reader.Close();
             }
 
-            return entity;
+            return data;
+        }
+
+        private void clearAllDataFromAssembly()
+        {
+            using (StreamWriter stream = new StreamWriter(_path, false))
+                stream.Write("");
+                    
+        }
+
+        private void writeInAssembly(List<string> data)
+        {
+
+            using (StreamWriter writer = new StreamWriter(_path))
+            {
+                
+                writer.WriteLine(string.Join(';', data));
+                writer.Close();
+            }
         }
 
         public abstract TEntity? Parse(string objectString);

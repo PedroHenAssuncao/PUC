@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using PapaPizza.Infraestructure.Repository.Implementation;
 using PapaPizza.Infraestructure.Repository.Interface;
+using PapaPizza.Presentation;
 
 internal class Program
 {
@@ -18,7 +19,11 @@ internal class Program
         IRecipeRepository recipeRepository = provider.GetService<IRecipeRepository>();
         IRecipeIngredientRepository recipeIngredientRepository = provider.GetService<IRecipeIngredientRepository>();
 
-        Console.WriteLine("Hello, World!");
+        var app = new PapaPizaApp(recipeIngredientRepository,ingredientRepository,recipeRepository);
+
+        app.RunApp();
+
+        Console.WriteLine("  _______   _                 _ \r\n |__   __| | |               | |\r\n    | | ___| |__   __ _ _   _| |\r\n    | |/ __| '_ \\ / _` | | | | |\r\n    | | (__| | | | (_| | |_| |_|\r\n    |_|\\___|_| |_|\\__,_|\\__,_(_)\r\n                                \r\n                                ");
     }
      
     private static void ConfigureServices(IServiceCollection serviceCollection)

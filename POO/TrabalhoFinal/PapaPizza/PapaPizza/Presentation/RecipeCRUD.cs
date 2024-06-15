@@ -27,14 +27,24 @@ namespace PapaPizza.Presentation
         {
             Console.Write("\n\t+-------------------+");
             Console.Write("\n\t| Exibindo Receitas |");
-            Console.Write("\n\t+-------------------+");
-
+            Console.Write("\n\t+-------------------+\n\n");
+            
             var ingredientes = _repository.FindAll();
 
             foreach (var item in ingredientes)
             {
-                Console.WriteLine(_repository.Parse(item));
+                string data = _repository.Parse(item);
+                string[] aux = data.Split(";");
+
+                for (int i = 1; i < aux.Length; i++)
+                {
+                    Console.Write(aux[i] + " | ");
+                }
+
+                Console.WriteLine();
             }
+
+            Console.WriteLine();
         }
 
         public void delete()
@@ -50,7 +60,7 @@ namespace PapaPizza.Presentation
 
                 Console.Write("\n\t+---------------------------------------+");
                 Console.Write("\n\t| Digite o nome da receita para excluir |");
-                Console.Write("\n\t+---------------------------------------+");
+                Console.Write("\n\t+---------------------------------------+\n");
                 Console.Write("-> ");
                 string nome = Console.ReadLine();
 
@@ -62,7 +72,7 @@ namespace PapaPizza.Presentation
                 {
                     Console.Write("\n\t+------------------------------------+");
                     Console.Write("\n\t| Houve um erro ao deletar a receita |");
-                    Console.Write("\n\t+------------------------------------+");
+                    Console.Write("\n\t+------------------------------------+\n");
                 }
             }
             else
@@ -71,151 +81,216 @@ namespace PapaPizza.Presentation
                 Console.Write("\n\t| Não há receitas |");
                 Console.Write("\n\t+-----------------+");
             }
+
+            Console.WriteLine();
         }
     
-        public void getIngredients(string name)
+        public void getIngredients()
         {
-            var recipe = _repository.FindByName(name);
 
-            if (recipe == null) {
+            bool empty = true;
 
-                Console.Write("\n\t+--------------------+");
-                Console.Write("\n\t| Receita não Existe |");
-                Console.Write("\n\t+--------------------+");
+            empty = !_repository.FindAll().Any();
 
-                return;
-            }
-
-            Console.Write("\n\t+-----------------------------------------+");
-            Console.Write($"\n\t| Exibindo ingredientes da {recipe.Name}: |");
-            Console.Write("\n\t+-----------------------------------------+");
-
-            var ingredients = _repository.GetIngredients(recipe.Name);
-
-            foreach (var item in ingredients)
+            if (!empty)
             {
-                Console.WriteLine(_ingredientRepository.Parse(item));
+                listAll();
+
+                Console.Write("\n\t+---------------------------------------------------+");
+                Console.Write("\n\t| Digite o nome da receita para ver os ingredientes |");
+                Console.Write("\n\t+---------------------------------------------------+\n");
+                Console.Write("-> ");
+                string name = Console.ReadLine();
+
+                var recipe = _repository.FindByName(name);
+
+                if (recipe == null)
+                {
+
+                    Console.Write("\n\t+--------------------+");
+                    Console.Write("\n\t| Receita não Existe |");
+                    Console.Write("\n\t+--------------------+\n\n");
+
+                    return;
+                }
+
+                Console.Write("\n\t+-----------------------------------------+");
+                Console.Write($"\n\t| Exibindo ingredientes da {recipe.Name}: |");
+                Console.Write("\n\t+-----------------------------------------\n\n+");
+
+                var ingredients = _repository.GetIngredients(recipe.Name);
+
+                foreach (var item in ingredients)
+                {
+                    string data = _ingredientRepository.Parse(item);
+                    string[] aux = data.Split(";");
+
+                    for (int i = 1; i < aux.Length; i++)
+                    {
+                        Console.Write(aux[i] + " | ");
+                    }
+
+                    Console.WriteLine();
+                }
             }
+            else
+            {
+
+                Console.Write("\n\t+-----------------+");
+                Console.Write("\n\t| Não há receitas |");
+                Console.Write("\n\t+-----------------+");
+            }
+
 
             Console.WriteLine();
         }
 
-        public void updateRecipe(string name)
+        public void updateRecipe()
         {
-            IngredientCRUD ingredientCRUD = new IngredientCRUD(_ingredientRepository);
+            bool empty = true;
 
-            var recipe = _repository.FindByName(name);
+            empty = !_repository.FindAll().Any();
 
-            if (recipe == null)
+            if (!empty)
             {
+                IngredientCRUD ingredientCRUD = new IngredientCRUD(_ingredientRepository);
 
-                Console.Write("\n\t+--------------------+");
-                Console.Write("\n\t| Receita não Existe |");
-                Console.Write("\n\t+--------------------+");
+                listAll();
 
-                return;
-            }
-
-            bool sair = false;
-
-            while (sair != true)
-            {
-                Console.Write("\n\t+-------------------------------------------+");
-                Console.Write("\n\t| Deseja adicionar ou remover ingredientes? |");
-                Console.Write("\n\t| (1)adicionar (2)remover (3)sair           |");
-                Console.Write("\n\t+-------------------------------------------+");
+                Console.Write("\n\t+-----------------------------------------+");
+                Console.Write("\n\t| Digite o nome da receita para atualizar |");
+                Console.Write("\n\t+-----------------------------------------+\n");
                 Console.Write("-> ");
-                int opt = int.Parse(Console.ReadLine());
+                string name = Console.ReadLine();
 
-                if (opt == 1 || opt == 2)
+                var recipe = _repository.FindByName(name);
+
+                if (recipe == null)
                 {
-                    Console.Write("\n\t+-----------------------------------------+");
-                    Console.Write($"\n\t| Exibindo ingredientes da {recipe.Name}: |");
-                    Console.Write("\n\t+-----------------------------------------+");
 
-                    var ingredients = _repository.GetIngredients(recipe.Name);
+                    Console.Write("\n\t+--------------------+");
+                    Console.Write("\n\t| Receita não Existe |");
+                    Console.Write("\n\t+--------------------+\n\n");
 
-                    foreach (var item in ingredients)
+                    return;
+                }
+
+                bool sair = false;
+
+                while (sair != true)
+                {
+                    Console.Write("\n\t+-------------------------------------------+");
+                    Console.Write("\n\t| Deseja adicionar ou remover ingredientes? |");
+                    Console.Write("\n\t| (1)adicionar (2)remover (3)sair           |");
+                    Console.Write("\n\t+-------------------------------------------+\n");
+                    Console.Write("-> ");
+                    int opt = int.Parse(Console.ReadLine());
+
+                    if (opt == 1 || opt == 2)
                     {
-                        Console.WriteLine(_ingredientRepository.Parse(item));
-                    }
+                        Console.Write("\n\t+-----------------------------------------+");
+                        Console.Write($"\n\t| Exibindo ingredientes da {recipe.Name}: |");
+                        Console.Write("\n\t+-----------------------------------------+\n\n");
 
-                    if (opt == 2)
-                    {
-                        Console.Write("\n\t+------------------------------+");
-                        Console.Write("\n\t| Digite o nome do ingrediente |");
-                        Console.Write("\n\t+------------------------------+");
-                        Console.Write("-> ");
-                        string ingredientName = Console.ReadLine();
+                        var ingredients = _repository.GetIngredients(recipe.Name);
 
-                        var ingredient = _ingredientRepository.FindByName(ingredientName);
-
-                        if (ingredient != null)
+                        foreach (var item in ingredients)
                         {
-                            var deletRecipeIngredient = _recipeIngredientRepository.FindAll().Where(x => x.IngredientId == ingredient.Id && x.RecipeId == recipe.Id).First();
+                            string data = _ingredientRepository.Parse(item);
+                            string[] aux = data.Split(";");
 
-                            _recipeIngredientRepository.Delete(deletRecipeIngredient.Id);
+                            for (int i = 1; i < aux.Length; i++)
+                            {
+                                Console.Write(aux[i] + " | ");
+                            }
+
+                            Console.WriteLine();
+                        }
+
+                        if (opt == 2)
+                        {
+                            Console.Write("\n\t+------------------------------+");
+                            Console.Write("\n\t| Digite o nome do ingrediente |");
+                            Console.Write("\n\t+------------------------------+\n\n");
+                            Console.Write("-> ");
+                            string ingredientName = Console.ReadLine();
+
+                            var ingredient = _ingredientRepository.FindByName(ingredientName);
+
+                            if (ingredient != null)
+                            {
+                                var deletRecipeIngredient = _recipeIngredientRepository.FindAll().Where(x => x.IngredientId == ingredient.Id && x.RecipeId == recipe.Id).First();
+
+                                _recipeIngredientRepository.Delete(deletRecipeIngredient.Id);
+                            }
+                            else
+                            {
+                                Console.Write("\n\t+--------------------------+");
+                                Console.Write("\n\t| O ingrediente não existe |");
+                                Console.Write("\n\t+--------------------------+");
+                            }
                         }
                         else
                         {
-                            Console.Write("\n\t+--------------------------+");
-                            Console.Write("\n\t| O ingrediente não existe |");
-                            Console.Write("\n\t+--------------------------+");
+                            ingredientCRUD.listAll();
+                            Console.WriteLine();
+                            Console.WriteLine("Digite o nome do ingrediente");
+                            Console.Write("-> ");
+                            string nameIngredient = Console.ReadLine();
+                            Console.WriteLine("Digite a quantidade");
+                            Console.Write("-> ");
+                            int quantidade = int.Parse(Console.ReadLine());
+
+                            var ingredient = _ingredientRepository.FindByName(nameIngredient);
+
+                            if (ingredient != null)
+                            {
+
+                                var newIngredient = new RecipeIngredientEntity()
+                                {
+                                    Amount = quantidade,
+                                    RecipeId = recipe.Id,
+                                    IngredientId = ingredient.Id
+
+                                };
+
+                                _recipeIngredientRepository.Create(newIngredient);
+                            }
+                            else
+                            {
+                                Console.Write("\n\t+--------------------------+");
+                                Console.Write("\n\t| O ingrediente não existe |");
+                                Console.Write("\n\t+--------------------------+");
+                            }
                         }
                     }
                     else
                     {
-                        ingredientCRUD.listAll();
-                        Console.WriteLine();
-                        Console.WriteLine("Digite o nome do ingrediente");
-                        Console.Write("-> ");
-                        string nameIngredient = Console.ReadLine();
-                        Console.WriteLine("Digite a quantidade");
-                        Console.Write("-> ");
-                        int quantidade = int.Parse(Console.ReadLine());
-
-                        var ingredient = _ingredientRepository.FindByName(nameIngredient);
-
-                        if (ingredient != null)
-                        {
-
-                            var newIngredient = new RecipeIngredientEntity()
-                            {
-                                Amount = quantidade,
-                                RecipeId = recipe.Id,
-                                IngredientId = ingredient.Id
-
-                            };
-
-                            _recipeIngredientRepository.Create(newIngredient);
-                        }
-                        else
-                        {
-                            Console.Write("\n\t+--------------------------+");
-                            Console.Write("\n\t| O ingrediente não existe |");
-                            Console.Write("\n\t+--------------------------+");
-                        }
+                        sair = true;
                     }
                 }
-                else
-                {
-                    sair = true;
-                }
             }
+            else
+            {
+                Console.Write("\n\t+-----------------+");
+                Console.Write("\n\t| Não há receitas |");
+                Console.Write("\n\t+-----------------+");
+            }
+            Console.WriteLine();
         }
 
         public void create()
         {
-            Console.Write("\n\t+--------------------------------------+");
-            Console.Write("\n\t| Digite as informações do ingrediente |");
-            Console.Write("\n\t+--------------------------------------+");
+            Console.Write("\n\t+----------------------------------+");
+            Console.Write("\n\t| Digite as informações da receita |");
+            Console.Write("\n\t+----------------------------------+\n");
 
             RecipeEntity newRecipe = new RecipeEntity();
 
-            var fields = newRecipe.GetType().GetFields();
+            var fields = newRecipe.GetType().GetProperties();
             List<string> values = new List<string>();
 
-            for (int i = 1; i < fields.Length; i++)
+            for (int i = 0; i < fields.Length -1; i++)
             {
                 Console.WriteLine($"Digite o {fields[i].Name}");
                 Console.Write("-> ");
@@ -242,6 +317,8 @@ namespace PapaPizza.Presentation
                 Console.Write("\n\t| Houve um erro ao salvar a receita |");
                 Console.Write("\n\t+-----------------------------------+");
             }
+
+            Console.WriteLine();
         }
 
         private void addIngredients(Guid recipeId, string name)
@@ -280,7 +357,7 @@ namespace PapaPizza.Presentation
 
                         Console.Write("\n\t+-----------------------------------------------------------+");
                         Console.Write("\n\t| Deseja Inserir mais ingredientes a receita? (1)Sim (2)Nao |");
-                        Console.Write("\n\t+-----------------------------------------------------------+");
+                        Console.Write("\n\t+-----------------------------------------------------------+\n\n");
                         Console.Write("-> ");
                         int opt = int.Parse(Console.ReadLine());
 

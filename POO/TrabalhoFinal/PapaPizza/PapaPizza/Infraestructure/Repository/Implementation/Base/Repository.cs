@@ -13,7 +13,7 @@ namespace PapaPizza.Infraestructure.Repository.Implementation.Base
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityBase, new()
     {
-        private readonly string _basePath = "..\\..\\..\\Resources\\{0}.csv";
+        private readonly string _basePath = "D:\\Desenvolvimento\\Puc\\POO\\TrabalhoFinal\\PapaPizza\\PapaPizza\\Resources\\{0}.csv";
 
         private string _path = string.Empty;
 

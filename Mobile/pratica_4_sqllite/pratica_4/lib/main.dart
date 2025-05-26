@@ -182,7 +182,6 @@ class _HomeState extends State<Home> {
 
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _idadeController = TextEditingController();
-  final TextEditingController _idController = TextEditingController();
   final TextEditingController _matriculaController = TextEditingController();
   final TextEditingController _cursoController = TextEditingController();
 
